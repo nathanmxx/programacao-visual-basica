@@ -1,7 +1,7 @@
 # Programação Visual Básica
 
-Dois programas em C# da disciplina de Programação Visual Básica, no 2º ano do
-ensino médio técnico: um de console e um com interface gráfica em WPF.
+Três programas em C# da disciplina de Programação Visual Básica, no 2º ano do
+ensino médio técnico: um de console e dois com interface gráfica em WPF.
 
 ## Programas
 
@@ -18,14 +18,31 @@ Aplicação de janela. O usuário digita um valor por linha numa caixa de texto 
 ao clicar em Calcular, a janela mostra a quantidade de valores, o menor, o maior,
 a média, a variância amostral e o desvio padrão, todos com duas casas decimais.
 
+### calculadora-hohmann/
+
+Calculadora de trajetória interplanetária. Recebe a distância da origem e do
+destino até o Sol, a massa da nave e o impulso específico do motor, e calcula a
+transferência de Hohmann entre as duas órbitas:
+
+- tempo de viagem, em dias e em meses
+- delta-V total, somando a manobra de saída e a de chegada
+- combustível necessário, em quilos e em toneladas, pela equação de Tsiolkovski
+
+Usa o parâmetro gravitacional do Sol e trata as distâncias em milhões de
+quilômetros. Para a transferência da Terra a Marte (149,6 e 227,9), devolve 259
+dias e 5,591 km/s de delta-V.
+
 ## Como executar
 
-Requer o SDK do .NET 8 ou superior. O projeto WPF só roda no Windows.
+Requer o SDK do .NET 8 ou superior. Os projetos WPF só rodam no Windows.
 
     cd numeros-pico
     dotnet run
 
     cd estatistica-wpf
+    dotnet run
+
+    cd calculadora-hohmann
     dotnet run
 
 ## Tecnologias
