@@ -16,9 +16,12 @@ namespace ConsultorioIMC
 
         string[] faixas = { "Magreza", "Saudável", "Sobrepeso", "Obesidade Grau I", "Obesidade Grau II", "Obesidade Grau III" };
 
+        string arquivo = "pessoas.json";
+
         public MainWindow()
         {
             InitializeComponent();
+            Carregar();
             Listar();
         }
 
@@ -37,9 +40,89 @@ namespace ConsultorioIMC
             return faixas[Faixa(imc)];
         }
 
+        string PegarTexto(string registro, string campo)
+        {
+            int p = registro.IndexOf(campo);
+            p = registro.IndexOf(":", p);
+            int inicio = registro.IndexOf("\"", p) + 1;
+            int fim = registro.IndexOf("\"", inicio);
+            return registro.Substring(inicio, fim - inicio);
+        }
+
+        double PegarNumero(string registro, string campo)
+        {
+            int p = registro.IndexOf(campo);
+            p = registro.IndexOf(":", p) + 1;
+            int fim = registro.IndexOf(",", p);
+            if (fim < 0) fim = registro.Length;
+            string valor = registro.Substring(p, fim - p);
+            valor = valor.Replace("}", "");
+            valor = valor.Trim();
+            valor = valor.Replace(".", ",");
+            return double.Parse(valor);
+        }
+
         string Numero(double n)
         {
             return n.ToString("0.##").Replace(",", ".");
+        }
+
+        string NumeroDuasCasas(double n)
+        {
+            return n.ToString("0.00").Replace(",", ".");
+        }
+
+        void Carregar()
+        {
+            total = 0;
+
+            File.AppendAllText(arquivo, "");
+            string texto = File.ReadAllText(arquivo);
+
+            if (texto.Trim().Length == 0)
+            {
+                File.WriteAllText(arquivo, "[" + Environment.NewLine + "]");
+                texto = File.ReadAllText(arquivo);
+            }
+
+            int pos = texto.IndexOf("{");
+            while (pos >= 0 && total < 200)
+            {
+                int fim = texto.IndexOf("}", pos);
+                if (fim < 0) break;
+
+                string registro = texto.Substring(pos, fim - pos);
+
+                ids[total] = (int)PegarNumero(registro, "\"Id\"");
+                nomes[total] = PegarTexto(registro, "\"Nome\"");
+                pesos[total] = PegarNumero(registro, "\"Peso (Kg)\"");
+                alturas[total] = PegarNumero(registro, "\"Altura (m)\"");
+                imcs[total] = pesos[total] / (alturas[total] * alturas[total]);
+                classificacoes[total] = Classificar(imcs[total]);
+                total = total + 1;
+
+                pos = texto.IndexOf("{", fim);
+            }
+        }
+
+        void Gravar()
+        {
+            string texto = "[" + Environment.NewLine;
+
+            for (int i = 0; i < total; i++)
+            {
+                texto = texto + "  {\"Id\": " + ids[i];
+                texto = texto + ", \"Nome\": \"" + nomes[i] + "\"";
+                texto = texto + ", \"Peso (Kg)\": " + Numero(pesos[i]);
+                texto = texto + ", \"Altura (m)\": " + Numero(alturas[i]);
+                texto = texto + ", \"IMC\": " + NumeroDuasCasas(imcs[i]);
+                texto = texto + ", \"Classificação\": \"" + classificacoes[i] + "\"}";
+                if (i < total - 1) texto = texto + ",";
+                texto = texto + Environment.NewLine;
+            }
+
+            texto = texto + "]";
+            File.WriteAllText(arquivo, texto);
         }
 
         void Listar()
@@ -108,6 +191,7 @@ namespace ConsultorioIMC
             classificacoes[total] = Classificar(imcs[total]);
             total = total + 1;
 
+            Gravar();
             Listar();
 
             txtId.Text = ids[total - 1].ToString();
