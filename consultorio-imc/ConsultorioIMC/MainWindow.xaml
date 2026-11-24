@@ -7,6 +7,7 @@
 
         <Label Content="Id:" Margin="20,60,0,0"/>
         <TextBox x:Name="txtId" Width="80" Height="26" Margin="60,62,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Content="Consultar" Width="100" Height="26" Margin="150,62,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Consultar_Click"/>
 
         <Label Content="Nome:" Margin="20,100,0,0"/>
         <TextBox x:Name="txtNome" Width="420" Height="26" Margin="80,102,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -18,6 +19,8 @@
         <TextBox x:Name="txtAltura" Width="100" Height="26" Margin="320,142,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
         <Button Content="Cadastrar" Width="100" Height="30" Margin="20,185,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Cadastrar_Click"/>
+        <Button Content="Alterar" Width="100" Height="30" Margin="130,185,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Alterar_Click"/>
+        <Button Content="Excluir" Width="100" Height="30" Margin="240,185,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Excluir_Click"/>
         <Button Content="Limpar" Width="100" Height="30" Margin="350,185,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Limpar_Click"/>
 
         <Label x:Name="lblResultado" Content="Informe os dados e clique em Cadastrar." Margin="20,230,0,0" FontSize="14"/>

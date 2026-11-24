@@ -125,6 +125,15 @@ namespace ConsultorioIMC
             File.WriteAllText(arquivo, texto);
         }
 
+        int Procurar(int id)
+        {
+            for (int i = 0; i < total; i++)
+            {
+                if (ids[i] == id) return i;
+            }
+            return -1;
+        }
+
         void Listar()
         {
             lstPesos.Items.Clear();
@@ -133,6 +142,17 @@ namespace ConsultorioIMC
                 string linha = "Id " + ids[i] + " - " + nomes[i] + " - Peso: " + Numero(pesos[i]) + " Kg";
                 lstPesos.Items.Add(linha);
             }
+        }
+
+        int LerId()
+        {
+            int id;
+            if (!int.TryParse(txtId.Text.Trim(), out id))
+            {
+                MessageBox.Show("Digite um Id numerico.");
+                return -1;
+            }
+            return id;
         }
 
         double LerNumero(string texto, string campo)
@@ -197,6 +217,89 @@ namespace ConsultorioIMC
             txtId.Text = ids[total - 1].ToString();
             lblResultado.Content = "Cadastrado com o Id " + ids[total - 1] + ". IMC: "
                 + imcs[total - 1].ToString("0.00") + " - " + classificacoes[total - 1];
+        }
+
+        private void Consultar_Click(object sender, RoutedEventArgs e)
+        {
+            int id = LerId();
+            if (id < 0) return;
+
+            int i = Procurar(id);
+            if (i < 0)
+            {
+                MessageBox.Show("Nao existe cadastro com o Id " + id + ".");
+                return;
+            }
+
+            txtNome.Text = nomes[i];
+            txtPeso.Text = pesos[i].ToString("0.##");
+            txtAltura.Text = alturas[i].ToString("0.##");
+            lblResultado.Content = "Id " + ids[i] + " - IMC: " + imcs[i].ToString("0.00") + " - " + classificacoes[i];
+        }
+
+        private void Alterar_Click(object sender, RoutedEventArgs e)
+        {
+            int id = LerId();
+            if (id < 0) return;
+
+            int i = Procurar(id);
+            if (i < 0)
+            {
+                MessageBox.Show("Nao existe cadastro com o Id " + id + ".");
+                return;
+            }
+
+            string nome = txtNome.Text.Trim();
+            if (nome.Length == 0)
+            {
+                MessageBox.Show("Digite o nome da pessoa.");
+                return;
+            }
+
+            double peso = LerNumero(txtPeso.Text, "Peso");
+            if (peso < 0) return;
+
+            double altura = LerNumero(txtAltura.Text, "Altura");
+            if (altura < 0) return;
+
+            nomes[i] = nome;
+            pesos[i] = peso;
+            alturas[i] = altura;
+            imcs[i] = peso / (altura * altura);
+            classificacoes[i] = Classificar(imcs[i]);
+
+            Gravar();
+            Listar();
+            lblResultado.Content = "Alterado. Id " + ids[i] + " - IMC: " + imcs[i].ToString("0.00") + " - " + classificacoes[i];
+        }
+
+        private void Excluir_Click(object sender, RoutedEventArgs e)
+        {
+            int id = LerId();
+            if (id < 0) return;
+
+            int i = Procurar(id);
+            if (i < 0)
+            {
+                MessageBox.Show("Nao existe cadastro com o Id " + id + ".");
+                return;
+            }
+
+            for (int j = i; j < total - 1; j++)
+            {
+                ids[j] = ids[j + 1];
+                nomes[j] = nomes[j + 1];
+                pesos[j] = pesos[j + 1];
+                alturas[j] = alturas[j + 1];
+                imcs[j] = imcs[j + 1];
+                classificacoes[j] = classificacoes[j + 1];
+            }
+            total = total - 1;
+
+            Gravar();
+            Listar();
+            Limpar();
+            lblResultado.Content = "Cadastro do Id " + id + " excluido.";
         }
 
         private void Limpar_Click(object sender, RoutedEventArgs e)
