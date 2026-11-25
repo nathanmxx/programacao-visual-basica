@@ -17,6 +17,7 @@ namespace ConsultorioIMC
         string[] faixas = { "Magreza", "Saudável", "Sobrepeso", "Obesidade Grau I", "Obesidade Grau II", "Obesidade Grau III" };
 
         string arquivo = "pessoas.json";
+        string relatorio = "relatorio_imc.html";
 
         public MainWindow()
         {
@@ -305,6 +306,78 @@ namespace ConsultorioIMC
         private void Limpar_Click(object sender, RoutedEventArgs e)
         {
             Limpar();
+        }
+
+        private void Relatorio_Click(object sender, RoutedEventArgs e)
+        {
+            double[] soma = new double[6];
+            int[] quantidade = new int[6];
+
+            for (int i = 0; i < total; i++)
+            {
+                int f = Faixa(imcs[i]);
+                soma[f] = soma[f] + imcs[i];
+                quantidade[f] = quantidade[f] + 1;
+            }
+
+            string valores = "";
+            for (int f = 0; f < 6; f++)
+            {
+                double media = 0;
+                if (quantidade[f] > 0) media = soma[f] / quantidade[f];
+                if (f > 0) valores = valores + ", ";
+                valores = valores + NumeroDuasCasas(media);
+            }
+
+            string linhas = "";
+            for (int i = 0; i < total; i++)
+            {
+                linhas = linhas + "<tr>";
+                linhas = linhas + "<td>" + nomes[i] + "</td>";
+                linhas = linhas + "<td>" + Numero(pesos[i]) + "</td>";
+                linhas = linhas + "<td>" + NumeroDuasCasas(alturas[i]) + "</td>";
+                linhas = linhas + "<td>" + NumeroDuasCasas(imcs[i]) + "</td>";
+                linhas = linhas + "<td>" + classificacoes[i] + "</td>";
+                linhas = linhas + "</tr>" + Environment.NewLine;
+            }
+
+            string html = "";
+            html = html + "<!DOCTYPE html>" + Environment.NewLine;
+            html = html + "<html lang=\"pt-br\">" + Environment.NewLine;
+            html = html + "<head>" + Environment.NewLine;
+            html = html + "<meta charset=\"UTF-8\">" + Environment.NewLine;
+            html = html + "<title>Pesquisa de Índice de Massa Corporal</title>" + Environment.NewLine;
+            html = html + "<script src='https://cdn.plot.ly/plotly-2.27.0.min.js'></script>" + Environment.NewLine;
+            html = html + "</head>" + Environment.NewLine;
+            html = html + "<body>" + Environment.NewLine;
+            html = html + "<center><div id='myDiv' style=\"width: 500px; height:500px;\">Pesquisa de Índice de Massa Corporal</div></center>" + Environment.NewLine;
+            html = html + "<script>" + Environment.NewLine;
+            html = html + "var data = [{" + Environment.NewLine;
+            html = html + "type: 'scatterpolar'," + Environment.NewLine;
+            html = html + "r: [" + valores + "]," + Environment.NewLine;
+            html = html + "theta: ['Magreza','Saudável','Sobrepeso','OBG-I','OBG-II','OBG-III'], fill: 'toself'" + Environment.NewLine;
+            html = html + "}]" + Environment.NewLine;
+            html = html + "layout = { polar: {" + Environment.NewLine;
+            html = html + "radialaxis: { visible: true, range: [0, 50]" + Environment.NewLine;
+            html = html + "}" + Environment.NewLine;
+            html = html + "}," + Environment.NewLine;
+            html = html + "showlegend: false" + Environment.NewLine;
+            html = html + "}" + Environment.NewLine;
+            html = html + "Plotly.newPlot(\"myDiv\", data, layout)" + Environment.NewLine;
+            html = html + "</script>" + Environment.NewLine;
+            html = html + "<center><h2>Pessoas avaliadas</h2></center>" + Environment.NewLine;
+            html = html + "<center><table border=\"1\" cellpadding=\"6\">" + Environment.NewLine;
+            html = html + "<tr><th>Nome</th><th>Peso (kg)</th><th>Altura (m)</th><th>IMC</th><th>Classificação</th></tr>" + Environment.NewLine;
+            html = html + linhas;
+            html = html + "</table></center>" + Environment.NewLine;
+            html = html + "<center><p>Total de pessoas cadastradas: " + total + "</p></center>" + Environment.NewLine;
+            html = html + "</body>" + Environment.NewLine;
+            html = html + "</html>" + Environment.NewLine;
+
+            File.WriteAllText(relatorio, html);
+
+            lblResultado.Content = "Relatorio gerado: " + relatorio;
+            MessageBox.Show("Relatorio gerado na pasta do programa com o nome " + relatorio + ".");
         }
     }
 }

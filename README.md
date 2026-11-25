@@ -1,7 +1,7 @@
 # Programação Visual Básica
 
-Três programas em C# da disciplina de Programação Visual Básica, no 2º ano do
-ensino médio técnico: um de console e dois com interface gráfica em WPF.
+Quatro programas em C# da disciplina de Programação Visual Básica, no 2º ano do
+ensino médio técnico: um de console e três com interface gráfica em WPF.
 
 ## Programas
 
@@ -32,6 +32,22 @@ Usa o parâmetro gravitacional do Sol e trata as distâncias em milhões de
 quilômetros. Para a transferência da Terra a Marte (149,6 e 227,9), devolve 259
 dias e 5,591 km/s de delta-V.
 
+### consultorio-imc/
+
+Cadastro de pacientes de um consultório de fisioterapia, com cálculo do Índice
+de Massa Corporal. Cada pessoa recebe um Id gerado sozinho, e o IMC é
+classificado em seis faixas, de Magreza a Obesidade Grau III. Os botões
+cadastram, consultam, alteram e excluem pelo Id, e uma lista mostra o peso de
+todos os cadastrados.
+
+Os dados ficam num arquivo `pessoas.json` ao lado do executável, lido ao abrir
+o programa e gravado a cada alteração. O JSON é montado e lido pelo próprio
+código, sem biblioteca. O botão de relatório gera `relatorio_imc.html`, com a
+tabela de pessoas e um gráfico polar da média do IMC em cada faixa, feito com
+Plotly.
+
+Diferente dos outros, este projeto é em .NET Framework 4.8.
+
 ## Como executar
 
 Requer o SDK do .NET 8 ou superior. Os projetos WPF só rodam no Windows.
@@ -45,8 +61,12 @@ Requer o SDK do .NET 8 ou superior. Os projetos WPF só rodam no Windows.
     cd calculadora-hohmann
     dotnet run
 
+O consultorio-imc abre no Visual Studio com a carga de desenvolvimento para desktop:
+basta abrir `ConsultorioIMC.sln` e apertar F5.
+
 ## Tecnologias
 
-C# e WPF (.NET 8), sem bibliotecas externas.
+C# e WPF, em .NET 8 e, no consultório, .NET Framework 4.8. Sem bibliotecas
+externas; o gráfico do relatório carrega o Plotly pela internet.
 
 Projeto desenvolvido em equipe.

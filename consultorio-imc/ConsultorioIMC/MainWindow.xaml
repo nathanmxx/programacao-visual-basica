@@ -22,6 +22,7 @@
         <Button Content="Alterar" Width="100" Height="30" Margin="130,185,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Alterar_Click"/>
         <Button Content="Excluir" Width="100" Height="30" Margin="240,185,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Excluir_Click"/>
         <Button Content="Limpar" Width="100" Height="30" Margin="350,185,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Limpar_Click"/>
+        <Button Content="Relatorio HTML" Width="130" Height="30" Margin="460,185,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Relatorio_Click"/>
 
         <Label x:Name="lblResultado" Content="Informe os dados e clique em Cadastrar." Margin="20,230,0,0" FontSize="14"/>
 
